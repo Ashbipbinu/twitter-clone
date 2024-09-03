@@ -1,51 +1,64 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    username : {
-        type: String,
-        required:true,
-        unique: true
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: function (v) {
+          return v !== null && v.trim() !== "";
+        },
+        message: "Username cannot be null or empty",
+      },
     },
-    fullName : {
-        type: String,
-        required: true
-    }, 
+    fullName: {
+      type: String,
+      required: true,
+    },
     email: {
-        type: String,
-        required: true
-    }, 
+      type: String,
+      required: true,
+    },
     password: {
-        type: String,
-        required: true,
-        minLength: 6
-    }, 
-    followers: [{
+      type: String,
+      required: true,
+      minLength: 6,
+    },
+    followers: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
-        default: []
-    }], 
-    following: [{
+        ref: "User",
+        default: [],
+      },
+    ],
+    following: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
-        default: []
-    }],
+        ref: "User",
+        default: [],
+      },
+    ],
     profileImg: {
-        type: String,
-        default: ''
+      type: String,
+      default: "",
     },
     coverImg: {
-        type:String,
-        default: ''
+      type: String,
+      default: "",
     },
     bio: {
-        type: String,
-        default: ''
-    }, link: {
-        type: String,
-        default: ''
-    }
-}, {timestamps:true})
+      type: String,
+      default: "",
+    },
+    link: {
+      type: String,
+      default: "",
+    },
+  },
+  { timestamps: true }
+);
 
-
-const User =  mongoose.model("User", userSchema)
-export default User
+const User = mongoose.model("User", userSchema);
+export default User;

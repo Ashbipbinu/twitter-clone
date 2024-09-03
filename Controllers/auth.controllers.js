@@ -11,41 +11,41 @@ export const signUp = async (req, res) => {
     const isUserExist = await User.findOne( { email })
     const isUserNameTaken = await User.findOne({ username })
     const exisitingEmail  = await User.findOne({ email })
-
     if(!emailRegEx.test(email)) {
         return res.status(400).json({ error: "Invalid email format"})
     }
-
+    
     if(isUserExist){
         return res.status(400).json({ error: "User already exists"})
     }
-
+    
     if(isUserNameTaken){
         return res.status(400).json({ error: "Username already taken" })
     }
-
+    
     if(exisitingEmail){
         return res.status(400).json( { error : "User already exists"})
     }
-
+    
     //hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt)
-
+    
     const newUser = new  User({
         fullName,
         email,
         password: hashedPassword,
         username
     })
-
+    
     if(newUser){
         //set cookie and a token
-        generateTokenAndSetCookie(newUser._id, res)
+    
         await newUser.save()
         res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName,
+            username:newUser.username,
             email: newUser.email,
             followers: newUser.followers,
             following: newUser.following,
@@ -69,10 +69,9 @@ export const logIn = async (req, res) => {
     try {
         const { username, password } = req.body;
         const isUserExists = await User.findOne( { username })
-        const isPasswordCorrect = bcrypt.compare(password, isUserExists?.password || ' ')
-
+        const isPasswordCorrect = await bcrypt.compare(password, isUserExists?.password || ' ')
         if(!isUserExists || !isPasswordCorrect){
-           return res.status(400).json({ error: "Invalid username or password"})
+           return res.status(400).json({ error: "Invalid username or password"})  
         }
 
         if(isUserExists){
