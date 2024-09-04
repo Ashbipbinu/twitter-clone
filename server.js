@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 
 import authRoutes from './Routes/authRoutes.js';
 import userRouter from './Routes/userRoutes.js';
+import postRouter from './Routes/postRoutes.js';
+import notificationRouter from './Routes/notificationRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -25,6 +27,8 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRouter)
+app.use('/api/posts', postRouter)
+app.use('/api/notififcations', notificationRouter)
 
 app.listen(PORT, () => {
     console.log(`Server is listening to ${PORT}`);
